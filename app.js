@@ -53,6 +53,22 @@ app.delete("/tasks/:id", (req, res) => {
     res.json({ message: "Task deleted successfully" });
 });
 
+// Update a task
+app.put("/tasks/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    const { title } = req.body;
+
+    const task = tasks.find(task => task.id === id);
+
+    if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+    }
+
+    task.title = title;
+
+    res.json(task);
+});
+
 // Start server
 app.listen(3000, () => {
     console.log("Server running on port 3000");
