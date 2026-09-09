@@ -1,15 +1,59 @@
 const express = require("express");
-
 const app = express();
 
-const PORT = 3000;
+app.use(express.json());
 
-// Home route
-app.get("/", (req, res) => {
-    res.send("Hello World");
+let tasks = [];
+let nextId = 1;
+
+// Get all tasks
+app.get("/tasks", (req, res) => {
+    res.json(tasks);
+});
+
+// Create a new task
+app.post("/tasks", (req, res) => {
+    const { title } = req.body;
+
+    const task = {
+        id: nextId++,
+        title: title
+    };
+
+    tasks.push(task);
+
+    res.status(201).json(task);
+});
+
+// Get task by ID
+app.get("/tasks/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const task = tasks.find(task => task.id === id);
+
+    if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.json(task);
+});
+
+// Delete task
+app.delete("/tasks/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const index = tasks.findIndex(task => task.id === id);
+
+    if (index === -1) {
+        return res.status(404).json({ message: "Task not found" });
+    }
+
+    tasks.splice(index, 1);
+
+    res.json({ message: "Task deleted successfully" });
 });
 
 // Start server
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
 });
