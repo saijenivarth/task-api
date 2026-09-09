@@ -99,7 +99,7 @@ app.put("/tasks/:id", (req, res) => {
     res.json(task);
 });
 
-// Delete task
+// Delete a task
 app.delete("/tasks/:id", (req, res) => {
     const id = parseInt(req.params.id);
 
